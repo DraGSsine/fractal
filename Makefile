@@ -6,7 +6,7 @@
 #    By: youchen <youchen@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/06 20:58:54 by youchen           #+#    #+#              #
-#    Updated: 2024/01/08 12:51:50 by youchen          ###   ########.fr        #
+#    Updated: 2024/01/08 14:45:41 by youchen          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ $(NAME):$(OBJS)
 	$(CC) $(CFLAGS) $(MLX) $(OBJS)  -o $(NAME)
 
 %.o: %.c fractol.h
-	$(CC) $(CFLAGS)  -Imlx -c $< -o $@
+	$(CC) $(CFLAGS) -Imlx -c $<
 
 clean:
 	rm -f $(OBJS)
