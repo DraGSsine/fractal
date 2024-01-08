@@ -1,60 +1,94 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractol.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/06 18:54:50 by youchen           #+#    #+#             */
+/*   Updated: 2024/01/08 10:44:44 by youchen          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
-#include <libc.h>
-int mandelbrot(Complex c)
-{
-	Complex z = {0, 0};
-	int iter = 0;
 
-	while (iter < MAX_ITER)
+int	julia(t_Complex z, double real, double imag)
+{
+	double		a;
+	double		b;
+	double		x;
+	double		y;
+
+	z.iter = 0;
+	while (z.iter < MAX_ITER)
 	{
-		double real_squared = z.real * z.real;
-		double imag_squared = z.imag * z.imag;
-
-		if (real_squared + imag_squared > 4)
-			return iter * 20;
-
-		z.imag = 2 * z.real * z.imag + c.imag;
-		z.real = real_squared - imag_squared + c.real;
-
-		iter++;
+		a = z.real * z.real;
+		b = z.real * z.imag;
+		x = z.imag * z.real;
+		y = z.imag * z.imag;
+		z.real = a - y + real;
+		z.imag = b + x + imag;
+		if (z.real * z.real + z.imag * z.imag > 4)
+			return (z.iter * 5);
+		z.iter++;
 	}
+	return (z.iter);
+}
 
-	return iter;
-}
-void my_mlx_pixel_put(t_data *data, int x, int y, int color)
+int	mandelbrot(t_Complex c)
 {
-	char *dst;
+	t_Complex	z;
+	double		a;
+	double		b;
+	double		x;
+	double		y;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	z.real = 0;
+	z.imag = 0;
+	z.iter = 0;
+	while (z.iter < MAX_ITER)
+	{
+		a = z.real * z.real;
+		b = z.real * z.imag;
+		x = z.imag * z.real;
+		y = z.imag * z.imag;
+		z.real = a - y + c.real;
+		z.imag = b + x + c.imag;
+		if (z.real * z.real + z.imag * z.imag > 4)
+			return (z.iter * 5);
+		z.iter++;
+	}
+	return (z.iter);
 }
-int close_window(int keycode,t_data *data)
+
+int	draw(t_data *data, int x, int y)
 {
-	(void)keycode;
-	mlx_destroy_window(data->mlx,data->win);
-	return(0);
+	t_Complex	c;
+
+	c.imag = data->max_imag - y * (data->max_imag - data->min_imag)
+		/ (double)WIDTH;
+	c.real = data->min_real + x * (data->max_real - data->min_real)
+		/ (double)HEIGHT;
+	if (ft_strcmp(data->fractal, "mandelbrot"))
+		return (mandelbrot(c));
+	else if (ft_strcmp(data->fractal, "julia"))
+		return (julia(c, ft_atoi(data->argv[2]), ft_atoi(data->argv[3])));
+	return (0);
 }
-void draw_mandelbrot(t_data *data, int width, int height)
+
+void	draw_fractal(t_data *data, int width, int height)
 {
-	double min_real = -2.0;
-	double max_real = 2.0;
-	double min_imag = -2.0;
-	double max_imag = 2.0;
-	int x = 0;
-	int y = 0;
+	int			x;
+	int			y;
+	int			color;
+
+	x = 0;
 	while (x < width)
 	{
 		y = 0;
 		while (y < height)
 		{
-			Complex c =
-			{
-				min_real + x * (max_real - min_real) / (double)width,
-				min_imag + y * (max_imag - min_imag) / (double)height
-			};
-
-			int iter = mandelbrot(c);
-			int color = iter | iter << 8;
+			color = draw(data, x, y);
 			my_mlx_pixel_put(data, x, y, color);
 			y++;
 		}
@@ -62,19 +96,50 @@ void draw_mandelbrot(t_data *data, int width, int height)
 	}
 }
 
-int main()
+int	mouse_hook(int button, void *param)
 {
-	t_data data;
+	t_data	*data;
 
+	data = param;
+	if (button == 5)
+	{
+		data->min_real *= 0.5;
+		data->max_real *= 0.5;
+		data->min_imag *= 0.5;
+		data->max_imag *= 0.5;
+	}
+	else if (button == 4)
+	{
+		data->min_real /= 0.5;
+		data->max_real /= 0.5;
+		data->min_imag /= 0.5;
+		data->max_imag /= 0.5;
+	}
+	draw_fractal(param, WIDTH, HEIGHT);
+	return (1);
+}
+int	main(int argc, char **argv)
+{
+	t_data	data;
+	t_condition condition;
+	
+	error_handlling(argc, argv);
+	data.argv = argv;
+	data.fractal = argv[1];
+	data.min_real = -2.0;
+	data.max_real = 2.0;
+	data.min_imag = -2.0;
+	data.max_imag = 2.0;
 	data.mlx = mlx_init();
-	data.win = mlx_new_window(data.mlx , 1000, 1000, "Mandelbrot Set");
-	data.img = mlx_new_image(data.mlx , 1000, 1000);
-	data.addr = mlx_get_data_addr(data.img, &data.bits_per_pixel, &data.line_length,
-								 &data.endian);
-	draw_mandelbrot(&data, 1000, 1000);
-	mlx_put_image_to_window(data.mlx , data.win, data.img, 0, 0);
-	mlx_hook(data.win,2, 1L<<0,close_window,&data);
-	mlx_loop(data.mlx );
-
-	return 0;
+	data.win = mlx_new_window(data.mlx, WIDTH, HEIGHT, "Fractol");
+	data.img = mlx_new_image(data.mlx, WIDTH, HEIGHT);
+	data.addr = mlx_get_data_addr(data.img,
+			&data.bits_per_pixel, &data.line_length, &data.endian);
+	draw_fractal(&data, WIDTH, HEIGHT);
+	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
+	mlx_hook(data.win, 17, 0, close_window, &data);
+	mlx_hook(data.win, 2, 0, esc_close, &data);
+	mlx_mouse_hook(data.win, mouse_hook, &data);
+	mlx_loop(data.mlx);
+	return (0);
 }
