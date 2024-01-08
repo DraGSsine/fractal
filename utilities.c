@@ -6,7 +6,7 @@
 /*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:21:57 by youchen           #+#    #+#             */
-/*   Updated: 2024/01/08 10:28:54 by youchen          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:42:45 by youchen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	}
 	return (1);
 }
+
 void	error_handlling(int argc, char **argv)
 {
 	if (

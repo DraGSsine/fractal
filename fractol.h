@@ -6,7 +6,7 @@
 /*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:56:20 by youchen           #+#    #+#             */
-/*   Updated: 2024/01/08 10:29:04 by youchen          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:43:25 by youchen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ typedef struct s_Complex
 	int		iter;
 }	t_Complex;
 
-
 typedef struct s_data
 {
 	void	*mlx;
@@ -52,7 +51,7 @@ typedef struct s_data
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 int		close_window(void *param);
-int		mouse_hook(int button, void *param);
+int		mouse_hook(int button, int x, int y, t_data *param);
 void	draw_fractal(t_data *data, int width, int height);
 double	ft_atoi(const char *nptr);
 int		esc_close(int keycode, void *param);

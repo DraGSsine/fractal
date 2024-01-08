@@ -6,7 +6,7 @@
 /*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 18:54:50 by youchen           #+#    #+#             */
-/*   Updated: 2024/01/08 10:44:44 by youchen          ###   ########.fr       */
+/*   Updated: 2024/01/08 14:44:05 by youchen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	julia(t_Complex z, double real, double imag)
 {
-	double		a;
-	double		b;
-	double		x;
-	double		y;
+	double	a;
+	double	b;
+	double	x;
+	double	y;
 
 	z.iter = 0;
 	while (z.iter < MAX_ITER)
@@ -78,9 +78,9 @@ int	draw(t_data *data, int x, int y)
 
 void	draw_fractal(t_data *data, int width, int height)
 {
-	int			x;
-	int			y;
-	int			color;
+	int	x;
+	int	y;
+	int	color;
 
 	x = 0;
 	while (x < width)
@@ -94,35 +94,13 @@ void	draw_fractal(t_data *data, int width, int height)
 		}
 		x++;
 	}
+	mlx_put_image_to_window(data->mlx, data->win, data->img, 0, 0);
 }
 
-int	mouse_hook(int button, void *param)
-{
-	t_data	*data;
-
-	data = param;
-	if (button == 5)
-	{
-		data->min_real *= 0.5;
-		data->max_real *= 0.5;
-		data->min_imag *= 0.5;
-		data->max_imag *= 0.5;
-	}
-	else if (button == 4)
-	{
-		data->min_real /= 0.5;
-		data->max_real /= 0.5;
-		data->min_imag /= 0.5;
-		data->max_imag /= 0.5;
-	}
-	draw_fractal(param, WIDTH, HEIGHT);
-	return (1);
-}
 int	main(int argc, char **argv)
 {
 	t_data	data;
-	t_condition condition;
-	
+
 	error_handlling(argc, argv);
 	data.argv = argv;
 	data.fractal = argv[1];
@@ -136,7 +114,6 @@ int	main(int argc, char **argv)
 	data.addr = mlx_get_data_addr(data.img,
 			&data.bits_per_pixel, &data.line_length, &data.endian);
 	draw_fractal(&data, WIDTH, HEIGHT);
-	mlx_put_image_to_window(data.mlx, data.win, data.img, 0, 0);
 	mlx_hook(data.win, 17, 0, close_window, &data);
 	mlx_hook(data.win, 2, 0, esc_close, &data);
 	mlx_mouse_hook(data.win, mouse_hook, &data);
