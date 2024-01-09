@@ -6,13 +6,13 @@
 /*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 17:56:20 by youchen           #+#    #+#             */
-/*   Updated: 2024/01/08 14:43:25 by youchen          ###   ########.fr       */
+/*   Updated: 2024/01/09 08:08:48 by youchen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FRACTOL_H
 # define FRACTOL_H
-# define MAX_ITER 1000
+# define MAX_ITER 300
 # define WIDTH 1000
 # define HEIGHT 1000
 # include <stdlib.h>
