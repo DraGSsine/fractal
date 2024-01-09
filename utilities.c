@@ -6,7 +6,7 @@
 /*   By: youchen <youchen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/06 19:21:57 by youchen           #+#    #+#             */
-/*   Updated: 2024/01/08 15:01:50 by youchen          ###   ########.fr       */
+/*   Updated: 2024/01/08 17:44:53 by youchen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,14 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 void	error_handlling(int argc, char **argv)
 {
+
 	if (
 		(argc > 4 || argc == 1)
+		|| (ft_strcmp(argv[1], "julia")
+			&& !(check_for_chars(argv[2]) && check_for_chars(argv[3])))
 		|| (ft_strcmp(argv[1], "mandelbrot") && argc != 2)
 		|| (ft_strcmp(argv[1], "julia") && argc != 4)
-		|| !(ft_strcmp(argv[1], "julia") || ft_strcmp(argv[1], "mandelbrot"))
-		|| !check_for_chars(argv[2])
-		|| !check_for_chars(argv[3]))
+		|| !(ft_strcmp(argv[1], "julia") || ft_strcmp(argv[1], "mandelbrot")))
 	{
 		perror("Usage: ./fractol mandelbrot\n       ./fractol julia 0.4 0.4\n");
 		exit(1);
